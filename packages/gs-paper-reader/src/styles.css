@@ -1,0 +1,35 @@
+.gspr-overlay-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.gspr-overlay-rect {
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+
+.gspr-overlay-reading-focus {
+  background: rgb(255 230 0 / 0.28);
+  outline: 1px solid rgb(174 134 0 / 0.35);
+}
+
+.gspr-overlay-search-preview {
+  background: rgb(88 166 255 / 0.22);
+  outline: 1px solid rgb(88 166 255 / 0.45);
+}
+
+.gspr-overlay-annotation {
+  background: rgb(255 214 10 / 0.22);
+}
+
+.gspr-overlay-ai-suggestion {
+  background: rgb(188 140 255 / 0.2);
+  outline: 1px dashed rgb(120 81 169 / 0.55);
+}
+
+.gspr-overlay-hover {
+  background: rgb(120 120 120 / 0.12);
+}
