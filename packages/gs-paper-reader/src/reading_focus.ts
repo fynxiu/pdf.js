@@ -59,6 +59,8 @@ export class SentenceFocusController {
   }
 
   focus(sentence: SentenceRef): void {
+    this.overlays.clear(undefined, "reading-focus");
+
     const page = this.viewer.getPageHandle(sentence.pageIndex);
     if (!page?.textLayerDiv) {
       this.state.currentSentenceId = sentence.id;
