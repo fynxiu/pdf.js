@@ -1,0 +1,40 @@
+{
+  "name": "@gs/paper-reader",
+  "version": "0.1.0",
+  "description": "Research-grade PDF.js viewer extension package for paper reading, annotations, evidence extraction, and AI-assisted review workflows.",
+  "type": "module",
+  "private": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./testing": {
+      "types": "./dist/testing/index.d.ts",
+      "import": "./dist/testing/index.js"
+    }
+  },
+  "sideEffects": [
+    "./src/styles.css"
+  ],
+  "peerDependencies": {
+    "pdfjs-dist": ">=5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "happy-dom": "^18.0.0",
+    "typescript": "^6.0.0",
+    "vitest": "^3.2.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "Apache-2.0"
+}
