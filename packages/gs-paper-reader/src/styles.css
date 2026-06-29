@@ -12,24 +12,24 @@
 }
 
 .gspr-overlay-reading-focus {
-  background: rgba(255, 230, 0, 0.28);
-  outline: 1px solid rgba(174, 134, 0, 0.35);
+  background: rgb(255 230 0 / 0.28);
+  outline: 1px solid rgb(174 134 0 / 0.35);
 }
 
 .gspr-overlay-search-preview {
-  background: rgba(88, 166, 255, 0.22);
-  outline: 1px solid rgba(88, 166, 255, 0.45);
+  background: rgb(88 166 255 / 0.22);
+  outline: 1px solid rgb(88 166 255 / 0.45);
 }
 
 .gspr-overlay-annotation {
-  background: rgba(255, 214, 10, 0.22);
+  background: rgb(255 214 10 / 0.22);
 }
 
 .gspr-overlay-ai-suggestion {
-  background: rgba(188, 140, 255, 0.20);
-  outline: 1px dashed rgba(120, 81, 169, 0.55);
+  background: rgb(188 140 255 / 0.2);
+  outline: 1px dashed rgb(120 81 169 / 0.55);
 }
 
 .gspr-overlay-hover {
-  background: rgba(120, 120, 120, 0.12);
+  background: rgb(120 120 120 / 0.12);
 }

@@ -1,6 +1,6 @@
 import type { PdfTextRange, SentenceIndex, SentenceRef } from "./types.js";
 
-const ABBREVIATION_PLACEHOLDER = "<prd>";
+const ABBREVIATION_PLACEHOLDER = "\0";
 const COMMON_ABBREVIATIONS = [
   "al.",
   "Dr.",
@@ -76,16 +76,40 @@ function segmentWithFallback(text: string): RawSentenceSegment[] {
   }
 
   const segments: RawSentenceSegment[] = [];
-  const regexp = /[^.!?]+[.!?]+(?:["'”’)]*)|[^.!?]+$/g;
-  let match: RegExpExecArray | null;
-  while ((match = regexp.exec(protectedText)) !== null) {
-    const raw = match[0];
-    const startOffset = match.index;
-    const endOffset = startOffset + raw.length;
-    const restored = raw.replaceAll(ABBREVIATION_PLACEHOLDER, ".");
-    segments.push({ startOffset, endOffset, text: restored.trim() });
+  let startOffset = 0;
+  let index = 0;
+  while (index < protectedText.length) {
+    if (!isSentenceTerminator(protectedText[index])) {
+      index += 1;
+      continue;
+    }
+
+    index += 1;
+    while (index < protectedText.length && isTrailingSentencePunctuation(protectedText[index])) {
+      index += 1;
+    }
+
+    pushSegment(segments, protectedText, startOffset, index);
+    startOffset = index;
   }
+  pushSegment(segments, protectedText, startOffset, protectedText.length);
   return segments;
+}
+
+function isSentenceTerminator(char: string | undefined): boolean {
+  return char === "." || char === "!" || char === "?";
+}
+
+function isTrailingSentencePunctuation(char: string | undefined): boolean {
+  return char === '"' || char === "'" || char === "”" || char === "’" || char === ")" || char === "]";
+}
+
+function pushSegment(segments: RawSentenceSegment[], protectedText: string, startOffset: number, endOffset: number): void {
+  const raw = protectedText.slice(startOffset, endOffset);
+  const restored = raw.replaceAll(ABBREVIATION_PLACEHOLDER, ".").trim();
+  if (restored.length > 0) {
+    segments.push({ startOffset, endOffset, text: restored });
+  }
 }
 
 export class InMemorySentenceIndex implements SentenceIndex {

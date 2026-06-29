@@ -14,6 +14,29 @@ describe("segmentSentences", () => {
     expect(sentences[1]?.text).toBe("This is the second sentence.");
   });
 
+  it("uses a linear fallback splitter without breaking common abbreviations", () => {
+    const originalSegmenter = Intl.Segmenter;
+    Object.defineProperty(Intl, "Segmenter", {
+      configurable: true,
+      value: undefined,
+    });
+    try {
+      const sentences = segmentSentences({
+        pageIndex: 0,
+        text: "Fig. 1 shows the result. This is stable!",
+      });
+
+      expect(sentences.map(sentence => sentence.text)).toEqual(["Fig. 1 shows the result.", "This is stable!"]);
+      expect(sentences[0]?.startOffset).toBe(0);
+      expect(sentences[0]?.endOffset).toBe(24);
+    } finally {
+      Object.defineProperty(Intl, "Segmenter", {
+        configurable: true,
+        value: originalSegmenter,
+      });
+    }
+  });
+
   it("builds a cross-page ordered sentence index", () => {
     const index = buildSentenceIndex([
       { pageIndex: 0, text: "A. B." },
