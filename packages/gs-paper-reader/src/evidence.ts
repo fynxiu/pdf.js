@@ -23,18 +23,31 @@ export class EvidenceService {
 
   fromAnnotation(input: NewEvidenceCard): EvidenceCard {
     const { annotation } = input;
-    return {
+    const card: EvidenceCard = {
       id: this.idFactory(),
       annotationId: annotation.id,
       paperId: annotation.paperId,
       quote: annotation.text,
       evidenceType: input.evidenceType,
-      userInterpretation: input.userInterpretation,
-      confidence: input.confidence,
-      linkedReviewQuestionId: annotation.linkedReviewQuestionId,
-      linkedCriterionId: annotation.linkedCriterionId,
-      extractionFieldId: annotation.extractionFieldId,
       createdAt: this.now().toISOString(),
     };
+
+    if (input.userInterpretation) {
+      card.userInterpretation = input.userInterpretation;
+    }
+    if (input.confidence) {
+      card.confidence = input.confidence;
+    }
+    if (annotation.linkedReviewQuestionId) {
+      card.linkedReviewQuestionId = annotation.linkedReviewQuestionId;
+    }
+    if (annotation.linkedCriterionId) {
+      card.linkedCriterionId = annotation.linkedCriterionId;
+    }
+    if (annotation.extractionFieldId) {
+      card.extractionFieldId = annotation.extractionFieldId;
+    }
+
+    return card;
   }
 }
