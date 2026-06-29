@@ -74,13 +74,16 @@ export class PdfJsViewerAdapter implements ViewerAdapter {
     if (!rawPageView?.div) {
       return null;
     }
-    return {
+    const pageHandle: PageHandle = {
       pageIndex,
       pageNumber: rawPageView.id ?? pageIndex + 1,
       div: rawPageView.div,
       textLayerDiv: rawPageView.textLayer?.div ?? rawPageView.div.querySelector<HTMLElement>(".textLayer"),
-      viewport: rawPageView.viewport,
     };
+    if (rawPageView.viewport) {
+      pageHandle.viewport = rawPageView.viewport;
+    }
+    return pageHandle;
   }
 
   getVisiblePages(): VisiblePageRef[] {
@@ -89,11 +92,16 @@ export class PdfJsViewerAdapter implements ViewerAdapter {
     if (!visible?.views?.length) {
       return [{ pageIndex: Math.max(0, this.getCurrentPage() - 1), pageNumber: this.getCurrentPage() }];
     }
-    return visible.views.map(view => ({
-      pageIndex: view.id - 1,
-      pageNumber: view.id,
-      percentVisible: view.percent,
-    }));
+    return visible.views.map(view => {
+      const result: VisiblePageRef = {
+        pageIndex: view.id - 1,
+        pageNumber: view.id,
+      };
+      if (typeof view.percent === "number") {
+        result.percentVisible = view.percent;
+      }
+      return result;
+    });
   }
 
   getSelection(): PdfTextSelection | null {
