@@ -3,6 +3,7 @@ export * from "./command_registry.js";
 export * from "./dom_text_range.js";
 export * from "./evidence.js";
 export * from "./overlay_layer.js";
+export * from "./paper_reader.js";
 export * from "./pdfjs_viewer_adapter.js";
 export * from "./reading_focus.js";
 export * from "./sentence_segmenter.js";
