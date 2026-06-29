@@ -155,11 +155,27 @@ export class PdfJsViewerAdapter implements ViewerAdapter {
   }
 
   scrollToPageRect(pageIndex: number, rect: PdfRect): void {
-    this.app.pdfViewer.scrollPageIntoView?.({
-      pageNumber: pageIndex + 1,
-      destArray: [null, { name: "XYZ" }, rect.x, rect.y, null],
-      allowNegativeOffset: true,
+    const page = this.getPageHandle(pageIndex);
+    if (!page) {
+      return;
+    }
+
+    const marker = page.div.ownerDocument.createElement("span");
+    marker.setAttribute("aria-hidden", "true");
+    Object.assign(marker.style, {
+      position: "absolute",
+      left: `${rect.x}px`,
+      top: `${rect.y}px`,
+      width: `${Math.max(1, rect.width)}px`,
+      height: `${Math.max(1, rect.height)}px`,
+      pointerEvents: "none",
     });
+    page.div.append(marker);
+    try {
+      marker.scrollIntoView({ block: "center", inline: "nearest" });
+    } finally {
+      marker.remove();
+    }
   }
 
   private findTextLayerForRange(range: Range): HTMLElement | null {
