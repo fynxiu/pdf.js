@@ -1,1 +1,3 @@
-export const panelControlsVersion = 1;
+export function closePanelsByDefault(shell: HTMLElement): void {
+  shell.classList.add("left-closed", "right-closed");
+}
