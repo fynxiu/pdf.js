@@ -16,7 +16,7 @@ interface InternalPageViewLike {
   viewport?: unknown;
 }
 
-interface InternalViewerLike extends PdfJsApplicationLike["pdfViewer"] {
+interface InternalViewerLike {
   _getVisiblePages?: () => { views?: Array<{ id: number; percent?: number }> };
 }
 
@@ -50,7 +50,7 @@ export class PdfJsViewerAdapter implements ViewerAdapter {
   }
 
   getScale(): PdfScaleValue | null {
-    return this.app.pdfViewer.currentScaleValue ?? this.app.pdfViewer.currentScale ?? null;
+    return (this.app.pdfViewer.currentScaleValue as PdfScaleValue | undefined) ?? this.app.pdfViewer.currentScale ?? null;
   }
 
   setScale(scale: PdfScaleValue): void {
@@ -87,7 +87,7 @@ export class PdfJsViewerAdapter implements ViewerAdapter {
   }
 
   getVisiblePages(): VisiblePageRef[] {
-    const viewer = this.app.pdfViewer as InternalViewerLike;
+    const viewer = this.app.pdfViewer as PdfJsApplicationLike["pdfViewer"] & InternalViewerLike;
     const visible = viewer._getVisiblePages?.();
     if (!visible?.views?.length) {
       return [{ pageIndex: Math.max(0, this.getCurrentPage() - 1), pageNumber: this.getCurrentPage() }];
