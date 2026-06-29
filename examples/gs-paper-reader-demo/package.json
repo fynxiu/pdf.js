@@ -6,7 +6,7 @@
   "description": "End-to-end demo app for @gs/paper-reader workflows on top of PDF.js.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc -p tsconfig.demo.json && vite build",
+    "build": "tsc -p tsconfig.demo.json && vite build index.htm",
     "typecheck": "tsc -p tsconfig.demo.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
