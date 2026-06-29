@@ -196,6 +196,27 @@ Common flags: `GENERIC`, `MOZCENTRAL`, `CHROME`, `MINIFIED`, `TESTING`, `LIB`, `
 - Follow existing code patterns
 - Don't modify translations directly (they come from Firefox)
 
+## Repository Sync Workflow
+
+This checkout uses the user's fork as the default remote and Mozilla's official
+repository as the upstream remote:
+
+```bash
+origin    git@github.com:fynxiu/pdf.js.git
+upstream  git@github.com:mozilla/pdf.js.git
+```
+
+Before starting any new change in this project, sync the local branch from the
+official repository first:
+
+```bash
+git fetch upstream
+git merge upstream/master
+```
+
+After the official changes are merged locally, continue the requested work and
+push resulting project changes to the fork through `origin`.
+
 ### Performance Considerations
 
 - Core parsing runs in a Web Worker - keep main thread work minimal
