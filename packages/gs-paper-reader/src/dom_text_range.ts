@@ -41,7 +41,7 @@ function findSpan(spans: readonly TextNodeSpan[], offset: number): TextNodeSpan 
       return span;
     }
   }
-  const last = spans[spans.length - 1];
+  const last = spans[spans.length - 1]!;
   return offset >= last.end ? last : null;
 }
 
