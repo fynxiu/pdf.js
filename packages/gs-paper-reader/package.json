@@ -18,21 +18,23 @@
     }
   },
   "sideEffects": [
-    "./src/styles.css"
+    "./src/styles.css",
+    "./dist/styles.css"
   ],
   "peerDependencies": {
     "pdfjs-dist": ">=5.0.0"
   },
   "devDependencies": {
     "@types/node": "^26.0.0",
-    "happy-dom": "^18.0.0",
+    "happy-dom": "^20.10.6",
     "typescript": "^6.0.0",
     "vitest": "^3.2.0"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && npm run copy:assets",
+    "copy:assets": "node ./scripts/copy-assets.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --pool=threads --maxWorkers=1 --minWorkers=1",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
