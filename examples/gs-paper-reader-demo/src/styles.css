@@ -11,6 +11,9 @@ button:hover, .demo-file-button:hover, .demo-tabs button.active { background: #e
 .demo-side-toggle-left { left: 10px; }
 .demo-side-toggle-right { right: 10px; }
 .demo-workspace { min-height: 0; display: grid; grid-template-columns: var(--left-width) minmax(520px, 1fr) var(--right-width); transition: grid-template-columns 120ms ease; }
+.demo-left-panel { grid-column: 1; }
+.demo-viewer-wrap { grid-column: 2; }
+.demo-right-panel { grid-column: 3; }
 .demo-left-panel, .demo-right-panel { min-height: 0; overflow: auto; background: #fff; border-right: 1px solid #d8dee4; }
 .demo-right-panel { border-right: 0; border-left: 1px solid #d8dee4; }
 .demo-shell.left-closed .demo-left-panel, .demo-shell.right-closed .demo-right-panel { display: none; }
