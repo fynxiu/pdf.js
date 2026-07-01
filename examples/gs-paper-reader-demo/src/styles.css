@@ -27,8 +27,9 @@ button:hover, .demo-file-button:hover, .demo-tabs button.active { background: #e
 .demo-text-layer span, .demo-text-layer br { color: transparent; position: absolute; white-space: pre; cursor: text; transform-origin: 0% 0%; user-select: text; -webkit-user-select: text; }
 .demo-text-layer ::selection { background: rgb(9 105 218 / 0.28); }
 .demo-native-annotation-layer { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-.gspr-overlay-layer { z-index: 7; pointer-events: none; }
+.gspr-overlay-layer { z-index: 1; pointer-events: none; }
 .gspr-overlay-annotation { background: rgb(255 211 61 / 0.32); outline: 1px solid rgb(168 127 0 / 0.45); }
+.demo-shell.has-selection .gspr-overlay-annotation { visibility: hidden; }
 .demo-floating-menu { position: fixed; z-index: 50; display: flex; gap: 6px; padding: 8px; border: 1px solid #d0d7de; border-radius: 10px; background: #fff; box-shadow: 0 12px 32px rgb(31 35 40 / 0.22); }
 .demo-list-item { width: 100%; display: grid; gap: 4px; text-align: left; margin-bottom: 8px; }
 .demo-list-item small, .demo-card small, .demo-field small { color: #57606a; }
