@@ -21,7 +21,7 @@ button:hover, .demo-file-button:hover, .demo-tabs button.active { background: #e
 .demo-panel-body { padding: 12px; }
 .demo-viewer-wrap { position: relative; min-height: 0; overflow: auto; background: #eaeef2; touch-action: pan-x pan-y; overscroll-behavior: contain; }
 .demo-viewer { min-height: 100%; padding: 24px 0 80px; display: grid; justify-content: center; gap: 18px; }
-.demo-pdf-page { position: relative; overflow: hidden; background: #fff; box-shadow: 0 6px 24px rgb(31 35 40 / 0.18); }
+.demo-pdf-page { --user-unit: 1; --total-scale-factor: calc(var(--scale-factor, 1) * var(--user-unit)); --scale-round-x: 1px; --scale-round-y: 1px; position: relative; overflow: hidden; background: #fff; box-shadow: 0 6px 24px rgb(31 35 40 / 0.18); }
 .demo-pdf-canvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; user-select: none; }
 .demo-text-layer { --text-scale-factor: var(--total-scale-factor, 1); --min-font-size-inv: calc(1 / var(--min-font-size, 1)); position: absolute; inset: 0; z-index: 2; opacity: 1; color: transparent; transform-origin: 0 0; line-height: 1; letter-spacing: normal; word-spacing: normal; text-size-adjust: none; user-select: text; -webkit-user-select: text; cursor: text; }
 .demo-text-layer span, .demo-text-layer br { color: transparent; position: absolute; white-space: pre; cursor: text; transform-origin: 0% 0%; user-select: text; -webkit-user-select: text; }

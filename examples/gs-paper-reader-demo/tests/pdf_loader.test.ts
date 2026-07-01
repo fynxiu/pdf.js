@@ -46,7 +46,8 @@ function createPdf(text: string) {
     numPages: 1,
     async getPage() {
       return {
-        getViewport: () => ({
+        getViewport: ({ scale }: { scale: number }) => ({
+          scale,
           width: 100,
           height: 120,
           convertToPdfPoint: (x: number, y: number) => [x, y],
@@ -97,5 +98,19 @@ describe("DemoPdfRenderer", () => {
     expect(container.textContent).toContain("second page");
     expect(container.textContent).not.toContain("first page");
     expect(viewer.registerPage).toHaveBeenCalledTimes(1);
+  });
+
+  it("sets the PDF.js page scale variable used by text-layer sizing", async () => {
+    const container = document.createElement("div");
+    document.body.append(container);
+    const viewer = createViewer();
+    const renderer = new DemoPdfRenderer(container, viewer as never);
+
+    const load = renderer.load(new Uint8Array([1]), "scaled.pdf", 1.5);
+    pdfjsMock.pendingDocuments[0]!.resolve(createPdf("scaled page"));
+    await expect(load).resolves.toMatchObject({ title: "scaled.pdf" });
+
+    const page = container.querySelector<HTMLElement>(".demo-pdf-page");
+    expect(page?.style.getPropertyValue("--scale-factor")).toBe("1.5");
   });
 });
