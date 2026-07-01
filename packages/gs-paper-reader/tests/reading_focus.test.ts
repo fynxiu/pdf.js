@@ -4,22 +4,23 @@ import { SentenceFocusController } from "../src/reading_focus.js";
 import { InMemorySentenceIndex } from "../src/sentence_segmenter.js";
 import { createMockPage, MockViewerAdapter } from "../src/testing/index.js";
 
-function installFakeRects(): () => void {
+function installFakeRects(
+  rects = [
+    {
+      left: 10,
+      top: 20,
+      width: 100,
+      height: 12,
+      right: 110,
+      bottom: 32,
+      x: 10,
+      y: 20,
+      toJSON: () => undefined,
+    },
+  ]
+): () => void {
   const originalGetClientRects = Range.prototype.getClientRects;
-  Range.prototype.getClientRects = (() =>
-    [
-      {
-        left: 10,
-        top: 20,
-        width: 100,
-        height: 12,
-        right: 110,
-        bottom: 32,
-        x: 10,
-        y: 20,
-        toJSON: () => undefined,
-      },
-    ] as unknown as DOMRectList) as typeof Range.prototype.getClientRects;
+  Range.prototype.getClientRects = (() => rects as unknown as DOMRectList) as typeof Range.prototype.getClientRects;
 
   return () => {
     Range.prototype.getClientRects = originalGetClientRects;
@@ -96,6 +97,46 @@ describe("SentenceFocusController", () => {
 
     expect(viewer.scrollCalls).toEqual([
       { pageIndex: 0, rect: { x: 10, y: 20, width: 100, height: 12 } },
+    ]);
+  });
+
+  it("centers scrolling on the full focused sentence bounds", () => {
+    restoreDomMethods();
+    restoreDomMethods = installFakeRects([
+      {
+        left: 10,
+        top: 20,
+        width: 100,
+        height: 12,
+        right: 110,
+        bottom: 32,
+        x: 10,
+        y: 20,
+        toJSON: () => undefined,
+      },
+      {
+        left: 80,
+        top: 60,
+        width: 160,
+        height: 12,
+        right: 240,
+        bottom: 72,
+        x: 80,
+        y: 60,
+        toJSON: () => undefined,
+      },
+    ]);
+    controller = new SentenceFocusController({
+      viewer,
+      overlays: new OverlayLayerManager(viewer),
+      sentenceIndex: createSentenceIndex(),
+      scrollIntoView: true,
+    });
+
+    controller.enable("p1:s1");
+
+    expect(viewer.scrollCalls).toEqual([
+      { pageIndex: 0, rect: { x: 10, y: 20, width: 230, height: 52 } },
     ]);
   });
 

@@ -1,6 +1,6 @@
 import { getPageLocalRectsForTextRange } from "./dom_text_range.js";
 import type { OverlayLayerManager } from "./overlay_layer.js";
-import type { ReadingFocusState, SentenceIndex, SentenceRef, ViewerAdapter } from "./types.js";
+import type { PageLocalRect, ReadingFocusState, SentenceIndex, SentenceRef, ViewerAdapter } from "./types.js";
 
 export interface SentenceFocusControllerOptions {
   viewer: ViewerAdapter;
@@ -78,13 +78,18 @@ export class SentenceFocusController {
     });
 
     this.state.currentSentenceId = sentence.id;
-    if (this.scrollIntoView && rects[0]) {
-      this.viewer.scrollToPageRect(sentence.pageIndex, {
-        x: rects[0].left,
-        y: rects[0].top,
-        width: rects[0].width,
-        height: rects[0].height,
-      });
+    const focusBounds = getBoundingPageLocalRect(rects);
+    if (this.scrollIntoView && focusBounds) {
+      if (this.viewer.scrollToPageLocalRect) {
+        this.viewer.scrollToPageLocalRect(sentence.pageIndex, focusBounds);
+      } else {
+        this.viewer.scrollToPageRect(sentence.pageIndex, {
+          x: focusBounds.left,
+          y: focusBounds.top,
+          width: focusBounds.width,
+          height: focusBounds.height,
+        });
+      }
     }
   }
 
@@ -108,4 +113,20 @@ export class SentenceFocusController {
     target.addEventListener("keydown", onKeyDown);
     return () => target.removeEventListener("keydown", onKeyDown);
   }
+}
+
+function getBoundingPageLocalRect(rects: readonly PageLocalRect[]): PageLocalRect | null {
+  if (rects.length === 0) {
+    return null;
+  }
+  const left = Math.min(...rects.map(rect => rect.left));
+  const top = Math.min(...rects.map(rect => rect.top));
+  const right = Math.max(...rects.map(rect => rect.left + rect.width));
+  const bottom = Math.max(...rects.map(rect => rect.top + rect.height));
+  return {
+    left,
+    top,
+    width: right - left,
+    height: bottom - top,
+  };
 }

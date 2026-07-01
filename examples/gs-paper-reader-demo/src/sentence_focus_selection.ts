@@ -23,3 +23,15 @@ export function findSentenceForSelection(
   }
   return best?.sentence ?? null;
 }
+
+export function findSentenceAtOffset(sentences: readonly SentenceRef[], pageIndex: number, offset: number): SentenceRef | null {
+  const pageSentences = sentences.filter(sentence => sentence.pageIndex === pageIndex);
+  const containing = pageSentences.find(sentence => offset >= sentence.startOffset && offset < sentence.endOffset);
+  if (containing) {
+    return containing;
+  }
+  if (pageSentences.some(sentence => sentence.startOffset === offset)) {
+    return null;
+  }
+  return pageSentences.find(sentence => offset === sentence.endOffset) ?? null;
+}

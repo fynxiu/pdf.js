@@ -90,6 +90,7 @@ export interface ViewerAdapter {
   getSelection(): PdfTextSelection | null;
   clearSelection(): void;
   scrollToPageRect(pageIndex: PdfPageIndex, rect: PdfRect): void;
+  scrollToPageLocalRect?(pageIndex: PdfPageIndex, rect: PageLocalRect): void;
 }
 
 export interface SentenceRef extends PdfTextRange {

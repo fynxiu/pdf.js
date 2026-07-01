@@ -43,15 +43,22 @@ function splitSentences(text: string): Array<{ start: number; end: number; text:
   const Segmenter = Intl.Segmenter;
   if (Segmenter) {
     return Array.from(new Segmenter("en", { granularity: "sentence" }).segment(text))
-      .map(segment => ({ start: segment.index, end: segment.index + segment.segment.length, text: segment.segment.trim() }))
-      .filter(segment => segment.text.length > 0);
+      .map(segment => trimSentencePart(segment.index, segment.segment))
+      .filter(segment => segment !== null);
   }
   const output: Array<{ start: number; end: number; text: string }> = [];
   const regexp = /[^.!?]+[.!?]+(?:["'”’)]*)|[^.!?]+$/g;
   let match: RegExpExecArray | null;
   while ((match = regexp.exec(text))) {
-    const clean = match[0].trim();
-    if (clean) output.push({ start: match.index, end: match.index + match[0].length, text: clean });
+    const part = trimSentencePart(match.index, match[0]);
+    if (part) output.push(part);
   }
   return output;
+}
+
+function trimSentencePart(start: number, segment: string): { start: number; end: number; text: string } | null {
+  const leadingWhitespace = segment.length - segment.trimStart().length;
+  const trailingWhitespace = segment.length - segment.trimEnd().length;
+  const trimmed = segment.slice(leadingWhitespace, segment.length - trailingWhitespace);
+  return trimmed ? { start: start + leadingWhitespace, end: start + segment.length - trailingWhitespace, text: trimmed } : null;
 }
