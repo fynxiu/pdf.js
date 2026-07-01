@@ -40,4 +40,16 @@ describe("PDF text selection layering", () => {
 
     expect(getComputedStyle(annotation).visibility).toBe("hidden");
   });
+
+  it("uses the demo selection overlay instead of native text-layer selection paint", () => {
+    expect(styles).toContain(".demo-text-layer ::selection { background: transparent; }");
+    expect(styles).toContain(".demo-active-selection-layer");
+    expect(styles).toContain(".demo-active-selection-rect");
+  });
+
+  it("applies PDF.js text-layer span scale variables for accurate selection geometry", () => {
+    expect(styles).toContain("--text-scale-factor: var(--total-scale-factor, 1)");
+    expect(styles).toContain("font-size: calc(var(--text-scale-factor) * var(--font-height))");
+    expect(styles).toContain("scaleX(var(--scale-x))");
+  });
 });

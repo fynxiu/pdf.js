@@ -64,7 +64,7 @@ export function createRangeFromOffsets(root: Node, startOffset: number, endOffse
 
 export function getPageLocalRectsFromRange(range: Range, pageDiv: HTMLElement): PageLocalRect[] {
   const pageBox = pageDiv.getBoundingClientRect();
-  return Array.from(range.getClientRects())
+  return getRangeClientRects(range)
     .filter(rect => rect.width > 0 && rect.height > 0)
     .map(rect => ({
       left: rect.left - pageBox.left,
@@ -72,6 +72,56 @@ export function getPageLocalRectsFromRange(range: Range, pageDiv: HTMLElement): 
       width: rect.width,
       height: rect.height,
     }));
+}
+
+function getRangeClientRects(range: Range): DOMRect[] {
+  const textNodeRects = getSelectedTextNodeRects(range);
+  return textNodeRects.length > 0 ? textNodeRects : Array.from(range.getClientRects());
+}
+
+function getSelectedTextNodeRects(range: Range): DOMRect[] {
+  const root = range.commonAncestorContainer;
+  const document = root.ownerDocument;
+  if (!document) {
+    return [];
+  }
+
+  const rects: DOMRect[] = [];
+  if (root.nodeType === Node.TEXT_NODE) {
+    appendSelectedTextNodeRects(range, root as Text, rects);
+    return rects;
+  }
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: node => {
+      if (!node.nodeValue || !range.intersectsNode(node)) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  });
+
+  while (walker.nextNode()) {
+    appendSelectedTextNodeRects(range, walker.currentNode as Text, rects);
+  }
+  return rects;
+}
+
+function appendSelectedTextNodeRects(range: Range, node: Text, rects: DOMRect[]): void {
+  const startOffset = node === range.startContainer ? range.startOffset : 0;
+  const endOffset = node === range.endContainer ? range.endOffset : node.length;
+  if (startOffset >= endOffset) {
+    return;
+  }
+
+  const nodeRange = node.ownerDocument.createRange();
+  try {
+    nodeRange.setStart(node, startOffset);
+    nodeRange.setEnd(node, endOffset);
+    rects.push(...Array.from(nodeRange.getClientRects()));
+  } finally {
+    nodeRange.detach();
+  }
 }
 
 export function getPageLocalRectsForTextRange(

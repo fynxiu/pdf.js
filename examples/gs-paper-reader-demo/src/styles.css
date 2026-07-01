@@ -23,10 +23,13 @@ button:hover, .demo-file-button:hover, .demo-tabs button.active { background: #e
 .demo-viewer { min-height: 100%; padding: 24px 0 80px; display: grid; justify-content: center; gap: 18px; }
 .demo-pdf-page { position: relative; overflow: hidden; background: #fff; box-shadow: 0 6px 24px rgb(31 35 40 / 0.18); }
 .demo-pdf-canvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; user-select: none; }
-.demo-text-layer { position: absolute; inset: 0; z-index: 2; opacity: 1; color: transparent; transform-origin: 0 0; line-height: 1; user-select: text; -webkit-user-select: text; cursor: text; }
+.demo-text-layer { --text-scale-factor: var(--total-scale-factor, 1); --min-font-size-inv: calc(1 / var(--min-font-size, 1)); position: absolute; inset: 0; z-index: 2; opacity: 1; color: transparent; transform-origin: 0 0; line-height: 1; letter-spacing: normal; word-spacing: normal; text-size-adjust: none; user-select: text; -webkit-user-select: text; cursor: text; }
 .demo-text-layer span, .demo-text-layer br { color: transparent; position: absolute; white-space: pre; cursor: text; transform-origin: 0% 0%; user-select: text; -webkit-user-select: text; }
-.demo-text-layer ::selection { background: rgb(9 105 218 / 0.28); }
+.demo-text-layer > :not(.markedContent), .demo-text-layer .markedContent span:not(.markedContent) { z-index: 1; font-size: calc(var(--text-scale-factor) * var(--font-height)); --scale-x: 1; --rotate: 0deg; transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv)); }
+.demo-text-layer ::selection { background: transparent; }
 .demo-native-annotation-layer { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.demo-active-selection-layer { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+.demo-active-selection-rect { background: rgb(9 105 218 / 0.28); border-radius: 0; }
 .gspr-overlay-layer { z-index: 1; pointer-events: none; }
 .gspr-overlay-annotation { background: rgb(255 211 61 / 0.32); outline: 1px solid rgb(168 127 0 / 0.45); }
 .demo-shell.has-selection .gspr-overlay-annotation { visibility: hidden; }
